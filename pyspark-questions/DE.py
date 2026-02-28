@@ -139,6 +139,24 @@ window_spec = Window.partitionBy("id").orderBy(col("updated_date").desc())
 df = df.withColumn("rn", row_number().over(window_spec))
 df_filter = df.filter(col("rn") ==1)
 
+## Identify Duplicate Records
+select id, count(*)
+       from orders
+       group by id
+       having count(*) > 1;
+
+## Identify Duplicate Records
+df_dedup = df.groupBy("id")\
+             .agg(count("*").alias("cnt"))\
+             .filter(col("cnt") > 1)
+
+## Find Employees Who Earn More Than Department Average
+sql_v6 = spark.sql(""" select emp_id, 
+                              emp_name, 
+                              deparment,
+                              sum(salary) over(partition by department
+                              
+
 
 
 
