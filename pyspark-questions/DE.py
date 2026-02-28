@@ -20,3 +20,17 @@ df_filtered = df.filter(df.age > 25)
 ## Or
 from pyspark.sq.functions import *
 df_filtered = df.filter(col("age") > 25)
+
+## Difference between select() and withColumn()?
+## --> select() will select only the required columns from a dataframe, suppose there are 20 columns returning from a
+## dataframe and we need only 3 columns, then we can use select() to select only the required columns.
+## withColumn() will add new column or it will modify an existing column.
+
+
+
+
+
+
+
+
+
