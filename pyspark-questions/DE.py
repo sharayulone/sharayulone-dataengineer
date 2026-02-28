@@ -82,6 +82,62 @@ df = df.join(broadcast(small_df), "id")
 ## cache() story level is only memory
 ## persist() we can define storage level, good for production jobs
 
+## what is checkpointing 
+## Checkpointing means saving the current state of your data to stable 
+## storage (like HDFS or S3) so Spark doesn’t have to recompute everything from the beginning if something fails.
+
+##SPARK SQL INTERVIEW QUESTIONS
+
+## How do you create a temporary view?
+df.createOrReplaceTempView("emp")
+
+## Write Spark SQL query to get 2nd highest salary
+sql_v1 = spark.sql(""" select max(salary) 
+                      from employees
+                      where salary < (select max(salary) from employees) """)
+
+## Write Spark SQL query to get 2nd highest salary
+sql_v2 = spark.sql(""" select max(salary)
+                       from employees
+                       where salary < (select max(salary) from employees) """)
+
+## How to remove duplicates in Spark SQL?
+spl = spark.sql(""" select distinct * from employees """)
+
+## Find 2nd Highest Salary Using Window Function in sql 
+sql_v3 = spark.sql(""" select salary from (select salary,
+                              dense_rank(), over(order by salary desc) as rank from employees) t 
+                              where rank = 2 """)
+                        
+
+## Find 2nd Highest Salary Using Window Function
+window_spec = Window.orderBy(col("salary").desc())
+df = df.withColumn("rank", dense_rank().over(window_spec)).filter("rank"==2).show()
+
+## Find Top 3 Salaries Per Department
+sql_v4 = spark.sql(""" select salary, department from (select salary,
+                              department,
+                              dense_rank(), over(partition by department order by salary desc) as rnk 
+                              from employees ) t 
+                              where rnk <= 3 """)
+
+## Find Top 3 Salaries Per Department in pyspark
+window_spec = Window.partitionBy(col("department")).orderBy(col("salary").desc())
+df = df.withColumn("rank", dense_rank().over(window_spec)).filter(col("rank") <= 3)
+
+## Remove Duplicate Records (Keep Latest) 
+## Table: orders(id, status, updated_date)
+sql_v5 = spark.sql(""" select id, updated_date from (
+                           select id,
+                           row_number() over(partition by id order by updated_desc desc) as rn from orders ) t
+                           where rn = 1 """)
+
+## Remove Duplicate Records (Keep Latest) in pyspark
+## Table: orders(id, status, updated_date)
+
+window_spec = Window.partitionBy("id").orderBy(col("updated_date").desc())
+df = df.withColumn("rn", row_number().over(window_spec))
+df_filter = df.filter(col("rn") ==1)
 
 
 
