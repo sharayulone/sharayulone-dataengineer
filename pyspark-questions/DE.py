@@ -11,6 +11,6 @@
 ## binary format, and using whole-stage code generation to reduce CPU and garbage collection overhead.
 
 ## How do you read a CSV file in PySpark?
-df = spark.read.option("header", True)\
-          .option("inferSchema", True)\
+df = spark.read.option("header", "true")\
+          .option("inferSchema", "true")\
           .csv("file_path")
