@@ -26,10 +26,20 @@ df_filtered = df.filter(col("age") > 25)
 ## dataframe and we need only 3 columns, then we can use select() to select only the required columns.
 ## withColumn() will add new column or it will modify an existing column.
 
+## Write a code which will increase the salary by 10% 
+--> df = df.withColumn("new_salary", df.salary * 1.1)
+
 ## How do you remove duplicates?
 df_dedup = df.dropDuplicates()
 ## Or
-df_dedup = df.droPDuplicates(["customer_id"])
+df_dedup = df.dropDuplicates(["customer_id"])
+
+## Difference between groupByKey() and reduceByKey()?
+## reduceByKey() performs map-side aggregation before shuffle, making it more efficient, whereas groupByKey() 
+## shuffles all values for a key without pre-aggregation, which increases memory and network overhead.
+
+## How do you handle null values?
+
 
 
 
