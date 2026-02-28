@@ -14,3 +14,9 @@
 df = spark.read.option("header", "true")\
           .option("inferSchema", "true")\
           .csv("file_path")
+
+## How do you filter rows?
+df_filtered = df.filter(df.age > 25)
+## Or
+from pyspark.sq.functions import *
+df_filtered = df.filter(col("age") > 25)
