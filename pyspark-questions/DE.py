@@ -26,6 +26,26 @@ df_filtered = df.filter(col("age") > 25)
 ## dataframe and we need only 3 columns, then we can use select() to select only the required columns.
 ## withColumn() will add new column or it will modify an existing column.
 
+## How do you remove duplicates?
+df_dedup = df.dropDuplicates()
+## Or
+df_dedup = df.droPDuplicates(["customer_id"])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
