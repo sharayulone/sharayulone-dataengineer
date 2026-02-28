@@ -39,6 +39,50 @@ df_dedup = df.dropDuplicates(["customer_id"])
 ## shuffles all values for a key without pre-aggregation, which increases memory and network overhead.
 
 ## How do you handle null values?
+df = df.na.fill(0)
+df = df.na.drop()
+df = df.na.fill({"salary" : 0})
+
+## How do you perform join in PySpark?
+df = df1.join(df2, df1.customer_id == df2.customer_id, "left")
+
+## What is broadcast join?
+df = df.join(broadcast(small_df), "id")
+
+## What is repartition vs coalesce?
+## repartition increases or decreases the number of partitions
+## coalesce decreases the number of partitions
+
+## How do you create UDF?
+## Avoid UDF when possible — it bypasses Catalyst optimization.
+
+## What are transformations and actions?
+## Transformations are lazy - select, filter, join, groupBy they does not execute until an action is called on them.
+## Actions - Trigger the execution - count, collect, write, show
+
+## How do you optimize a slow Spark job?
+## Answer structure:
+##         Check Spark UI
+##         Look for shuffle stages
+##         Check skew
+##         Increase partitions
+##         Use broadcast join
+##         Avoid UDF
+##         Cache wisely
+##         Tune executor memory
+
+## How do you handle data skew?
+## Techniques:
+##           Salting
+##           Broadcast small table
+##           Increase partitions
+##           Use skew join hints
+
+## What is caching and persistence?
+## cache() story level is only memory
+## persist() we can define storage level, good for production jobs
+
+
 
 
 
