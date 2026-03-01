@@ -154,7 +154,60 @@ df_dedup = df.groupBy("id")\
 sql_v6 = spark.sql(""" select emp_id, 
                               emp_name, 
                               deparment,
-                              sum(salary) over(partition by department
+                              salary
+                              from (select *,
+                              AVG(salary) over(partition by department) as dept_avg from employees) t
+                              where salary > dept_avg """)
+
+## Find Employees Who Earn More Than Department Average in pyspark
+
+window_spec = Window.partitionBy("department")
+df = df.withColumn("dept_avg", avg("salary").over(window_spec))
+df = df.filter(col("salary") > col("dept_avg"))
+df.show()
+
+## Name Sports 
+Forest  Badmintion, cricket, football
+Bob     cricket, football
+Ace     Golf, volleyball
+
+df = df.select(col("Name"), split(col("sports"), ",").alias("array_sports"))
+df = df.select(col("Name"), explode(col("array_sports")))
+df.show()
+
+## City1    City2    City3  
+## Kolkata           WB
+##          Gurgaon  null
+## null              bangalore
+
+## Fetch the first not null value and create a new column
+df = df.withColumn("City", coalesce(col("City1"), col("City2"), col("City3"))) 
+
+## The above will also include null values
+df = df.withColumn("City", coalesce(when(col("City1") == "", None).otherwise(col("City1")), \
+                                    when(col("City2") == "", None).otherwise(col("City2")), \
+                                    when(col("City3") == "", None).otherwise(col("City3"))))
+
+
+## EmpID   EmpName    Skill
+##     1      John      ADF
+##     1      John      ADB
+##     1      John   PowerBI
+##     2     Steve       ADF
+##     2     Steve       SQL
+##     2     Steve   CrystalReport
+##     3     James       ADF
+##     3     James       SQL
+##     3     James       SSIS
+##     4      Acey       SQL
+##     4      Acey       SSIS
+##     4      Acey       SSAS
+##     4      Acey       ADF
+df = df.groupBy(col("EmpID"), col("EmpName")).agg(collect_list(col("Skill")).alias("skill_list"))
+df = df.select(col("EmpName"), concat_ws(",", col("skill_list")).alias("Skill"))
+df.show()
+
+
                               
 
 
