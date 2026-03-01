@@ -2,6 +2,6 @@
 Ans - SparkSession is the entry point of spark, to create a spark session we need to import it first
       from pyspark.sql import SparkSession
       spark = SparkSession.builder \
-              .appName("My First SS")
+              .appName("My First SS") \
               .getOrCreate()
 
